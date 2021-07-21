@@ -95,7 +95,7 @@ d3.csv("../data/NumGarantXmes.csv").then(function (data) {
     .attr("y", -30)
     .attr("class", "title")
     .attr("text-anchor", "middle")
-    .text("Garantías x mes")
+    .text("Garantías por mes")
     .attr("style", "fill: black; font-size: 20px; font-family: Helvetica");
 
 

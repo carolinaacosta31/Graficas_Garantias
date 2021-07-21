@@ -78,7 +78,7 @@ d3.csv("../data/ProductosXMes.csv").then(function (data) {
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")
-        .text("Productos x mes")
+        .text("Productos por mes")
         .attr("style", "fill: black; font-size: 20px; font-family: Helvetica");
 
 

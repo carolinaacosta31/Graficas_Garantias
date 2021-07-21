@@ -82,7 +82,7 @@ d3.csv("../data/GarantXDepto.csv").then(function (data) {
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")
-        .text("Garantías x departamento")
+        .text("Garantías por departamento")
         .attr("style", "fill: black; font-size: 20px; font-family: Helvetica");
 
 

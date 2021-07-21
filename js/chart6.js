@@ -82,7 +82,7 @@ d3.csv("../data/GarantXMunicipios30.csv").then(function (data) {
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")
-        .text("Garantías x municipio")
+        .text("Garantías por municipio")
         .attr("style", "fill: black; font-size: 20px; font-family: Helvetica");
 
 

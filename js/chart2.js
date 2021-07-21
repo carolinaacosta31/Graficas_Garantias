@@ -81,7 +81,7 @@ d3.csv("../data/IntermediariosXMes.csv").then(function (data) {
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")
-        .text("Intermediarios x mes")
+        .text("Intermediarios por mes")
         .attr("style", "fill: black; font-size: 20px; font-family: Helvetica");
 
 

@@ -80,7 +80,7 @@ d3.csv("../data/SucursalesXMes.csv").then(function (data) {
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")
-        .text("Sucursales x mes")
+        .text("Sucursales por mes")
         .attr("style", "fill: black; font-size: 20px; font-family: Helvetica");
 
 
