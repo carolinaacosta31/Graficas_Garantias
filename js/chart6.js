@@ -2,7 +2,7 @@
 // set the dimensions and margins of the graph
 const margin6 = { top: 60, right: 30, bottom: 70, left: 160 },
     width6 = 800 - margin6.left - margin6.right,
-    height6 = 400 - margin6.top - margin6.bottom;
+    height6 = 500 - margin6.top - margin6.bottom;
 
 // append the svg object to the body of the page
 const svg6 = d3.select("#my_dataviz6")
@@ -25,6 +25,10 @@ d3.csv("../data/GarantXMunicipios30.csv").then(function (data) {
     //console.log(minGarantias)
     minGarantias = 5927;
 
+    let totalGarantias = d3.cumsum(data,
+        d => d.Garantias);
+    totalGarantias = totalGarantias[totalGarantias.length - 1]
+    
     let cScale = d3.scaleLinear()
         .domain([minGarantias, maxGarantias])
         .range(["#96C03A", "#005091"])
@@ -43,7 +47,7 @@ d3.csv("../data/GarantXMunicipios30.csv").then(function (data) {
 
     // Add Y axis
     const y = d3.scaleLinear()
-        .domain([0, 310000])
+        .domain([0, 350000])
         .range([height6, 0]);
     svg6.append("g")
         .call(d3.axisLeft(y));
@@ -66,7 +70,7 @@ d3.csv("../data/GarantXMunicipios30.csv").then(function (data) {
         .enter()
         .append("text")
         .text(function (d) {
-            return numberWithDots((Math.round(d.Garantias)));
+            return (numberWithDots((Math.round(d.Garantias))) + ' (' + numberWithDots((((d.Garantias/totalGarantias)*100).toFixed(2))) + '%)');
         })
         .attr("text-anchor", "start")
         .attr("class", "yAxis")
