@@ -15,6 +15,20 @@ const svg6 = d3.select("#my_dataviz6")
 // Parse the Data
 d3.csv("../data/GarantXMunicipios30.csv").then(function (data) {
 
+    let maxGarantias = d3.max(data,
+        d => d.Garantias);
+    //console.log(maxGarantias)
+    maxGarantias = 250743;
+
+    let minGarantias = d3.min(data,
+        d => d.Garantias);
+    //console.log(minGarantias)
+    minGarantias = 5927;
+
+    let cScale = d3.scaleLinear()
+        .domain([minGarantias, maxGarantias])
+        .range(["#96C03A", "#005091"])
+
     // X axis
     const x = d3.scaleBand()
         .range([0, width6])
@@ -29,7 +43,7 @@ d3.csv("../data/GarantXMunicipios30.csv").then(function (data) {
 
     // Add Y axis
     const y = d3.scaleLinear()
-        .domain([0, 260000])
+        .domain([0, 310000])
         .range([height6, 0]);
     svg6.append("g")
         .call(d3.axisLeft(y));
@@ -42,9 +56,26 @@ d3.csv("../data/GarantXMunicipios30.csv").then(function (data) {
         .attr("y", d => y(d.Garantias))
         .attr("width", x.bandwidth())
         .attr("height", d => height6 - y(d.Garantias))
-        .attr("fill", "#005091")
+        .attr("fill", d => cScale(d.Garantias))
         .append("title")
         .text(function (d) { return d.Municipio + ' \n' + numberWithDots((Math.round(d.Garantias))) + ' garantías'; })
+
+    svg6.append("g")
+        .selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function (d) {
+            return numberWithDots((Math.round(d.Garantias)));
+        })
+        .attr("text-anchor", "start")
+        .attr("class", "yAxis")
+        .attr("style", "font-size: 12px; font-family: Helvetica, sans-serif")
+        .attr("fill", "#005091")
+        .attr('transform', (d, i) => {
+            return 'translate( ' + ((((i * (width6 / data.length)) + ((width6 / data.length) / 2)) * 0.99) + 8) + ' , ' + (y(d.Garantias) - 5) + '),' + 'rotate(-90)'
+                ;
+        })
 
     svg6.append("text")
         .attr("x", (width6 + margin6.right) / 2)

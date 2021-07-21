@@ -15,6 +15,18 @@ const svg3 = d3.select("#my_dataviz3")
 // Parse the Data
 d3.csv("../data/SucursalesXMes.csv").then(function (data) {
 
+    let maxSucursales = d3.max(data,
+        d => d.sucursales);
+        //console.log(maxSucursales)
+
+    let minSucursales = d3.min(data,
+        d => d.sucursales);
+        //console.log(minSucursales)
+
+    let cScale = d3.scaleLinear()
+        .domain([minSucursales, maxSucursales])
+        .range(["#96C03A", "#005091"])
+
     // X axis
     const x = d3.scaleBand()
         .range([0, width3])
@@ -29,7 +41,7 @@ d3.csv("../data/SucursalesXMes.csv").then(function (data) {
 
     // Add Y axis
     const y = d3.scaleLinear()
-        .domain([0, 4500])
+        .domain([0, 5000])
         .range([height3, 0]);
     svg3.append("g")
         .call(d3.axisLeft(y));
@@ -42,12 +54,29 @@ d3.csv("../data/SucursalesXMes.csv").then(function (data) {
         .attr("y", d => y(d.sucursales))
         .attr("width", x.bandwidth())
         .attr("height", d => height3 - y(d.sucursales))
-        .attr("fill", "#005091")
+        .attr("fill", d => cScale(d.sucursales))
         .append("title")
         .text(function (d) { return d.Fecha + ' \n' + numberWithDots((Math.round(d.sucursales))) + ' sucursales'; })
 
+    svg3.append("g")
+        .selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function (d) {
+            return numberWithDots((Math.round(d.sucursales)));
+        })
+        .attr("text-anchor", "start")
+        .attr("class", "yAxis")
+        .attr("style", "font-size: 12px; font-family: Helvetica, sans-serif")
+        .attr("fill", "#005091")
+        .attr('transform', (d, i) => {
+            return 'translate( ' + ((((i * (width3 / data.length)) + ((width3 / data.length) / 2)) * 0.99) + 8) + ' , ' + (y(d.sucursales) - 5) + '),' + 'rotate(-90)'
+                ;
+        })
+
     svg3.append("text")
-        .attr("x", (width3  + margin3.right) / 2)
+        .attr("x", (width3 + margin3.right) / 2)
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")

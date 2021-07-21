@@ -15,6 +15,16 @@ const svg2 = d3.select("#my_dataviz2")
 // Parse the Data
 d3.csv("../data/IntermediariosXMes.csv").then(function (data) {
 
+    let maxIntermediarios = d3.max(data,
+        d => d.Intermediarios);
+
+    let minIntermediarios = d3.min(data,
+        d => d.Intermediarios);
+
+    let cScale = d3.scaleLinear()
+        .domain([minIntermediarios, maxIntermediarios])
+        .range(["#96C03A", "#005091"])
+
     // X axis
     const x = d3.scaleBand()
         .range([0, width2])
@@ -30,7 +40,7 @@ d3.csv("../data/IntermediariosXMes.csv").then(function (data) {
     // Add Y axis
     const y = d3.scaleLinear()
         .domain([0, 80])
-        .range([height3, 0]);
+        .range([height2, 0]);
     svg2.append("g")
         .call(d3.axisLeft(y));
 
@@ -42,12 +52,32 @@ d3.csv("../data/IntermediariosXMes.csv").then(function (data) {
         .attr("y", d => y(d.Intermediarios))
         .attr("width", x.bandwidth())
         .attr("height", d => height3 - y(d.Intermediarios))
-        .attr("fill", "#005091")
+        .attr("fill", d => cScale(d.Intermediarios))
         .append("title")
         .text(function (d) { return d.Fecha + ' \n' + numberWithDots((Math.round(d.Intermediarios))) + ' Intermediarios'; })
 
+    // Add y labels to plot	
+
+    svg2.append("g")
+        .selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function (d) {
+            return numberWithDots((Math.round(d.Intermediarios)));
+        })
+        .attr("text-anchor", "start")
+        .attr("class", "yAxis")
+        .attr("style", "font-size: 12px; font-family: Helvetica, sans-serif")
+        .attr("fill", "#005091")
+        .attr('transform', (d, i) => {
+            return 'translate( ' + ((((i * (width2 / data.length)) + ((width2 / data.length) / 2)) * 0.99) + 8) + ' , ' + (y(d.Intermediarios) - 5) + '),' + 'rotate(-90)'
+                ;
+        })
+        ;
+
     svg2.append("text")
-        .attr("x", (width2  + margin2.right) / 2)
+        .attr("x", (width2 + margin2.right) / 2)
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")

@@ -15,6 +15,16 @@ const svg4 = d3.select("#my_dataviz4")
 // Parse the Data
 d3.csv("../data/ProductosXMes.csv").then(function (data) {
 
+    let maxProductos = d3.max(data,
+        d => d.Productos);
+
+    let minProductos = d3.min(data,
+        d => d.Productos);
+
+    let cScale = d3.scaleLinear()
+        .domain([minProductos, maxProductos])
+        .range(["#96C03A", "#005091"])
+
     // X axis
     const x = d3.scaleBand()
         .range([0, width4])
@@ -29,7 +39,7 @@ d3.csv("../data/ProductosXMes.csv").then(function (data) {
 
     // Add Y axis
     const y = d3.scaleLinear()
-        .domain([0, 40])
+        .domain([0, 43])
         .range([height4, 0]);
     svg4.append("g")
         .call(d3.axisLeft(y));
@@ -42,12 +52,29 @@ d3.csv("../data/ProductosXMes.csv").then(function (data) {
         .attr("y", d => y(d.Productos))
         .attr("width", x.bandwidth())
         .attr("height", d => height4 - y(d.Productos))
-        .attr("fill", "#005091")
+        .attr("fill", d => cScale(d.Productos))
         .append("title")
         .text(function (d) { return d.Fecha + ' \n' + numberWithDots((Math.round(d.Productos))) + ' productos'; })
 
+    svg4.append("g")
+        .selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function (d) {
+            return numberWithDots((Math.round(d.Productos)));
+        })
+        .attr("text-anchor", "start")
+        .attr("class", "yAxis")
+        .attr("style", "font-size: 12px; font-family: Helvetica, sans-serif")
+        .attr("fill", "#005091")
+        .attr('transform', (d, i) => {
+            return 'translate( ' + ((((i * (width4 / data.length)) + ((width4 / data.length) / 2)) * 0.99) + 8) + ' , ' + (y(d.Productos) - 5) + '),' + 'rotate(-90)'
+                ;
+        })
+
     svg4.append("text")
-        .attr("x", (width4  + margin4.right) / 2)
+        .attr("x", (width4 + margin4.right) / 2)
         .attr("y", -30)
         .attr("class", "title")
         .attr("text-anchor", "middle")
